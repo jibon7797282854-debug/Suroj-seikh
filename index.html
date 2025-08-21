@@ -1,0 +1,377 @@
+DOCTYPE html><html lang="bn">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>potchir.com — অনলাইন শপিং</title>
+  <meta name="description" content="potchir.com — মোবাইল‑ফাস্ট, Flipkart‑inspired ফ্রন্টএন্ড। Pure HTML/CSS/JS, লোকালস্টোরেজ কার্ট, সার্চ, ক্যাটেগরি ফিল্টার।" />
+  <meta name="theme-color" content="#0f172a" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --bg:#0b1020; --surface:#0f172a; --card:#0f182e; --muted:#93a2b7; --text:#e5e7eb;
+      --brand:#2563eb; --accent:#10b981; --ring:#38bdf8; --danger:#ef4444; --gold:#fbbf24;
+      --shadow:0 10px 25px rgba(0,0,0,.25);
+    }
+    [data-theme="light"]{--bg:#f8fafc;--surface:#ffffff;--card:#ffffff;--text:#0f172a;--muted:#475569;--brand:#1d4ed8;--accent:#059669;--ring:#0ea5e9}
+    *{box-sizing:border-box}
+    html,body{margin:0;height:100%}
+    body{font-family:Inter,system-ui,Segoe UI,Roboto,Helvetica,Arial,sans-serif;background:var(--bg);color:var(--text);}
+    a{color:inherit;text-decoration:none}
+    img{max-width:100%;display:block}
+    .container{width:min(1200px,94%);margin-inline:auto}/* Topbar */
+.topbar{position:sticky;top:0;z-index:60;background:linear-gradient(180deg,rgba(0,0,0,.6),rgba(0,0,0,0));backdrop-filter:blur(8px) saturate(140%)}
+.nav{display:flex;align-items:center;gap:.8rem;justify-content:space-between;padding:10px 0}
+.brand{display:flex;align-items:center;gap:.6rem;font-weight:800}
+.brand .dot{width:12px;height:12px;border-radius:999px;background:linear-gradient(135deg,var(--brand),var(--accent));box-shadow:0 0 0 3px rgba(37,99,235,.35)}
+.search{flex:1;display:flex;align-items:center;gap:.5rem;background:var(--surface);border:1px solid rgba(255,255,255,.12);border-radius:14px;padding:.55rem .75rem}
+.search input{flex:1;border:0;outline:none;background:transparent;color:var(--text)}
+.icon-btn{display:inline-flex;align-items:center;gap:.4rem;border:1px solid rgba(255,255,255,.12);padding:.55rem .75rem;border-radius:12px;background:transparent;color:var(--text)}
+.btn{display:inline-flex;align-items:center;gap:.5rem;padding:.7rem 1rem;border-radius:14px;border:0;background:linear-gradient(135deg,var(--brand),var(--accent));color:white;font-weight:700;box-shadow:var(--shadow);cursor:pointer}
+.badge{display:inline-flex;align-items:center;gap:.3rem;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);padding:.25rem .5rem;border-radius:999px;color:var(--muted);font-size:.8rem}
+
+/* Category bar */
+.catbar{background:var(--surface);border-top:1px solid rgba(255,255,255,.08);border-bottom:1px solid rgba(255,255,255,.08)}
+.cat-scroll{display:flex;gap:.8rem;overflow:auto;padding:.6rem 0;scroll-snap-type:x mandatory}
+.chip{scroll-snap-align:start;white-space:nowrap;border:1px solid rgba(255,255,255,.14);padding:.45rem .75rem;border-radius:999px;color:var(--text);background:transparent}
+.chip.active,.chip:hover{background:rgba(59,130,246,.15);border-color:rgba(59,130,246,.45)}
+
+/* Hero */
+.hero{display:grid;grid-template-columns:1.3fr .7fr;gap:1rem;padding:16px 0}
+.banner{background:radial-gradient(900px 500px at 10% 0%, rgba(37,99,235,.15), transparent 50%),var(--surface);border:1px solid rgba(255,255,255,.08);border-radius:16px;box-shadow:var(--shadow);padding:18px}
+.banner h1{margin:.2rem 0 0;font-size:clamp(1.6rem,5vw,2.6rem)}
+.banner p{color:var(--muted)}
+.side{display:grid;gap:1rem}
+
+/* Product grid */
+section{padding:12px 0 28px}
+.section-title{display:flex;align-items:end;justify-content:space-between}
+h2{margin:0 0 .6rem;font-size:1.4rem}
+.grid{display:grid;gap:1rem}
+.grid-5{grid-template-columns:repeat(5,1fr)}
+.grid-4{grid-template-columns:repeat(4,1fr)}
+.grid-3{grid-template-columns:repeat(3,1fr)}
+.grid-2{grid-template-columns:repeat(2,1fr)}
+
+.card{background:var(--surface);border:1px solid rgba(255,255,255,.08);border-radius:16px;padding:10px;display:flex;flex-direction:column;gap:.4rem}
+.thumb{height:160px;display:flex;align-items:center;justify-content:center;background:linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.02));border-radius:12px;overflow:hidden}
+.title{font-weight:600}
+.price{font-weight:800}
+.strike{color:var(--muted);text-decoration:line-through;font-size:.9rem}
+.star{color:var(--gold)}
+
+/* Cart drawer */
+.drawer{position:fixed;inset:auto 0 0 auto;width:min(420px,94%);background:var(--card);border-left:1px solid rgba(255,255,255,.12);box-shadow:var(--shadow);transform:translateX(100%);transition:transform .3s ease;z-index:90;display:flex;flex-direction:column}
+.drawer.open{transform:translateX(0)}
+.drawer-header{display:flex;align-items:center;justify-content:space-between;padding:14px 16px;border-bottom:1px solid rgba(255,255,255,.12)}
+.drawer-body{padding:12px 16px;overflow:auto;flex:1;display:grid;gap:.8rem}
+.cart-item{display:grid;grid-template-columns:64px 1fr auto;gap:.6rem;align-items:center;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);padding:8px;border-radius:12px}
+.qty{display:flex;align-items:center;gap:.4rem}
+.drawer-footer{border-top:1px solid rgba(255,255,255,.12);padding:14px 16px;display:grid;gap:.6rem}
+
+/* Product modal */
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.5);display:none;align-items:center;justify-content:center;z-index:80}
+.modal.open{display:flex}
+.modal-card{width:min(880px,96%);background:var(--card);border:1px solid rgba(255,255,255,.12);border-radius:18px;box-shadow:var(--shadow);display:grid;grid-template-columns:1.1fr 1fr}
+.modal-body{padding:16px;display:grid;gap:.6rem}
+
+/* Footer */
+footer{margin-top:20px;border-top:1px dashed rgba(255,255,255,.18);color:var(--muted);padding:22px 0}
+
+/* Responsive */
+@media (max-width: 980px){
+  .grid-5{grid-template-columns:repeat(4,1fr)}
+  .hero{grid-template-columns:1fr}
+}
+@media (max-width: 780px){
+  .grid-5,.grid-4{grid-template-columns:repeat(3,1fr)}
+  .modal-card{grid-template-columns:1fr}
+}
+@media (max-width: 560px){
+  .grid-5,.grid-4,.grid-3{grid-template-columns:repeat(2,1fr)}
+  .thumb{height:140px}
+  .search{display:none}
+}
+
+  </style>
+</head>
+<body>
+  <!-- Topbar -->
+  <div class="topbar">
+    <div class="container nav">
+      <a class="brand" href="#" aria-label="potchir home">
+        <span class="dot"></span>
+        <span>potchir<span style="color:var(--accent)">.com</span></span>
+      </a>
+      <div class="search" role="search">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <input id="q" placeholder="খুঁজুন: মোবাইল, ল্যাপটপ, জুতো…" />
+      </div>
+      <div style="display:flex;align-items:center;gap:.6rem">
+        <button id="loginBtn" class="icon-btn" aria-haspopup="true">🔐 লগইন</button>
+        <button id="themeBtn" class="icon-btn" aria-label="toggle theme">🌙</button>
+        <button id="cartBtn" class="btn" aria-haspopup="true">🛒 কার্ট <span id="cartCount" class="badge" style="margin-left:.4rem">0</span></button>
+      </div>
+    </div>
+  </div>  <!-- Category bar -->  <div class="catbar">
+    <div class="container cat-scroll" id="catBar">
+      <!-- chips will be injected -->
+    </div>
+  </div>  <main class="container">
+    <!-- Hero -->
+    <div class="hero">
+      <div class="banner">
+        <span class="badge">আজকের ডিল</span>
+        <h1>বাংলার সবচেয়ে ফ্রেশ অনলাইন বাজার</h1>
+        <p>ইলেকট্রনিক্স, ফ্যাশন, গ্রোসারি—এক জায়গায়। দ্রুত ডেলিভারি, নিরাপদ পেমেন্ট, এবং দারুণ ছাড়।</p>
+        <div style="display:flex;gap:.6rem;flex-wrap:wrap;margin-top:.4rem">
+          <a class="btn" href="#deals">ডিল দেখুন</a>
+          <a class="icon-btn" href="#new">নতুন আসা</a>
+        </div>
+      </div>
+      <div class="side">
+        <div class="banner" style="display:grid;grid-template-columns:96px 1fr;gap:10px;align-items:center">
+          <img src="https://picsum.photos/160/120?random=11" alt="Offer" style="border-radius:12px"/>
+          <div>
+            <div class="badge">⚡ ফ্ল্যাশ সেল</div>
+            <div style="font-weight:700">স্মার্টওয়াচ শুরু ₹999</div>
+            <div class="muted">স্টক শেষ হওয়ার আগে</div>
+          </div>
+        </div>
+        <div class="banner" style="display:grid;grid-template-columns:96px 1fr;gap:10px;align-items:center">
+          <img src="https://picsum.photos/160/120?random=12" alt="Offer" style="border-radius:12px"/>
+          <div>
+            <div class="badge">🥗 গ্রোসারি</div>
+            <div style="font-weight:700">মিনিমাম 30% ছাড়</div>
+            <div class="muted">প্রতিদিনের প্রয়োজনীয় জিনিস</div>
+          </div>
+        </div>
+      </div>
+    </div><!-- Product sections -->
+<section id="deals">
+  <div class="section-title">
+    <h2>সেরা ডিল</h2>
+    <a class="icon-btn" href="#">সব দেখুন →</a>
+  </div>
+  <div id="dealGrid" class="grid grid-5"></div>
+</section>
+
+<section id="new">
+  <div class="section-title">
+    <h2>নতুন আসা</h2>
+    <span class="badge">প্রতিদিন আপডেট</span>
+  </div>
+  <div id="newGrid" class="grid grid-5"></div>
+</section>
+
+  </main>  <!-- Cart Drawer -->  <aside id="cart" class="drawer" aria-hidden="true">
+    <div class="drawer-header">
+      <strong>🛒 আপনার কার্ট</strong>
+      <button id="cartClose" class="icon-btn">✖</button>
+    </div>
+    <div id="cartBody" class="drawer-body"></div>
+    <div class="drawer-footer">
+      <div style="display:flex;align-items:center;justify-content:space-between">
+        <span>মোট</span>
+        <strong id="cartTotal">₹0</strong>
+      </div>
+      <button id="checkoutBtn" class="btn">💳 চেকআউট</button>
+      <small class="muted">ডেমো: চেকআউট প্রেস করলে অর্ডার সারাংশ ইমেইলে পাঠানোর অপশন দেখাবে।</small>
+    </div>
+  </aside>  <!-- Product Modal -->  <div id="pModal" class="modal" role="dialog" aria-modal="true">
+    <div class="modal-card">
+      <div id="pModalImg" class="thumb" style="height:100%"></div>
+      <div class="modal-body">
+        <div class="badge" id="pModalCat"></div>
+        <h3 id="pModalTitle" style="margin:0"></h3>
+        <div id="pModalRating"></div>
+        <div style="display:flex;align-items:center;gap:.5rem">
+          <div class="price" id="pModalPrice"></div>
+          <div class="strike" id="pModalMrp"></div>
+          <div class="badge" id="pModalOff"></div>
+        </div>
+        <p id="pModalDesc" class="muted"></p>
+        <div style="display:flex;gap:.5rem;flex-wrap:wrap">
+          <button id="pAdd" class="btn">🛒 কার্টে নিন</button>
+          <button id="pBuy" class="icon-btn">⚡ এক্ষুণি কিনুন</button>
+          <button id="pClose" class="icon-btn">বন্ধ</button>
+        </div>
+      </div>
+    </div>
+  </div>  <footer>
+    <div class="container">
+      © <span id="year"></span> potchir.com • অনুপ্রেরণা: Flipkart UI (কপি নয়) • প্রাইভেসি • টার্মস
+    </div>
+  </footer>  <script>
+  // ===== Data (sample catalog) =====
+  const CATEGORIES = ["সব", "মোবাইল", "ল্যাপটপ", "অডিও", "ফ্যাশন", "হোম", "গ্রোসারি", "গেমিং", "অ্যাক্সেসরিজ"];
+  const PRODUCTS = [
+    {id:"p1", title:"Redmi Note 13", cat:"মোবাইল", price:12999, mrp:15999, rating:4.4, img:"https://picsum.photos/300/220?random=21", tags:["deal"], desc:"AMOLED, 5G, 5000mAh"},
+    {id:"p2", title:"realme Narzo 70 Pro", cat:"মোবাইল", price:17999, mrp:21999, rating:4.2, img:"https://picsum.photos/300/220?random=22", tags:["new"], desc:"Sony sensor, fast charge"},
+    {id:"p3", title:"Fire-Boltt Smartwatch", cat:"অ্যাক্সেসরিজ", price:1499, mrp:3499, rating:4.1, img:"https://picsum.photos/300/220?random=23", tags:["deal"], desc:"BT calling, SpO2"},
+    {id:"p4", title:"boAt Airdopes 141", cat:"অডিও", price:999, mrp:2490, rating:4.0, img:"https://picsum.photos/300/220?random=24", tags:["deal","new"], desc:"42H playback"},
+    {id:"p5", title:"HP 15s Ryzen 5", cat:"ল্যাপটপ", price:46999, mrp:53999, rating:4.3, img:"https://picsum.photos/300/220?random=25", tags:["deal"], desc:"16GB/512GB, FHD"},
+    {id:"p6", title:"Lenovo Ideapad Slim 3", cat:"ল্যাপটপ", price:38999, mrp:45999, rating:4.2, img:"https://picsum.photos/300/220?random=26", tags:["new"], desc:"12th Gen i5"},
+    {id:"p7", title:"Men's Running Shoes", cat:"ফ্যাশন", price:1299, mrp:2599, rating:4.1, img:"https://picsum.photos/300/220?random=27", tags:["deal"], desc:"Lightweight, breathable"},
+    {id:"p8", title:"Non‑stick Cookware Set", cat:"হোম", price:1999, mrp:3499, rating:4.0, img:"https://picsum.photos/300/220?random=28", tags:["deal"], desc:"3‑pcs set"},
+    {id:"p9", title:"Basmati Rice 5kg", cat:"গ্রোসারি", price:399, mrp:599, rating:4.4, img:"https://picsum.photos/300/220?random=29", tags:["new"], desc:"Premium long grain"},
+    {id:"p10", title:"Mechanical Keyboard", cat:"গেমিং", price:2499, mrp:3999, rating:4.5, img:"https://picsum.photos/300/220?random=30", tags:["deal"], desc:"Blue switches"},
+    {id:"p11", title:"Gaming Mouse RGB", cat:"গেমিং", price:999, mrp:1499, rating:4.3, img:"https://picsum.photos/300/220?random=31", tags:["new"], desc:"7200 DPI"},
+    {id:"p12", title:"Portable SSD 1TB", cat:"অ্যাক্সেসরিজ", price:4999, mrp:6999, rating:4.6, img:"https://picsum.photos/300/220?random=32", tags:["deal"], desc:"USB‑C, high speed"},
+  ];
+
+  // ===== State =====
+  const state = {
+    q: "",
+    cat: "সব",
+    cart: JSON.parse(localStorage.getItem("potchir_cart")||"{}")
+  };
+
+  // ===== Helpers =====
+  const qs = (s,p=document)=>p.querySelector(s);
+  const qsa = (s,p=document)=>Array.from(p.querySelectorAll(s));
+  const fmt = n=>"₹"+n.toLocaleString("en-IN");
+  const off = (mrp,price)=> Math.round((1-price/mrp)*100);
+
+  // Theme
+  const applyTheme = t=>{document.documentElement.setAttribute('data-theme', t);localStorage.setItem('pot_theme',t)};
+  applyTheme(localStorage.getItem('pot_theme')||'dark');
+  qs('#themeBtn').onclick=()=>applyTheme(document.documentElement.getAttribute('data-theme')==='light'?'dark':'light');
+
+  // Build category chips
+  const catBar = qs('#catBar');
+  function renderCats(){
+    catBar.innerHTML = '';
+    CATEGORIES.forEach(c=>{
+      const b = document.createElement('button');
+      b.className = 'chip'+(state.cat===c?' active':'');
+      b.textContent=c; b.onclick=()=>{state.cat=c; renderAll()};
+      catBar.appendChild(b);
+    });
+  }
+
+  // Product card
+  function card(p){
+    const el = document.createElement('div');
+    el.className = 'card';
+    el.innerHTML = `
+      <div class="thumb"><img src="${p.img}" alt="${p.title}" loading="lazy"></div>
+      <div class="title">${p.title}</div>
+      <div class="muted">${p.cat}</div>
+      <div style="display:flex;align-items:center;gap:.5rem">
+        <span class="price">${fmt(p.price)}</span>
+        <span class="strike">${fmt(p.mrp)}</span>
+        <span class="badge">${off(p.mrp,p.price)}% off</span>
+      </div>
+      <div aria-label="rating">${'★'.repeat(Math.round(p.rating))}<span class="muted"> (${p.rating})</span></div>
+      <div style="display:flex;gap:.5rem;flex-wrap:wrap;margin-top:.2rem">
+        <button class="btn add">🛒 Add</button>
+        <button class="icon-btn view">দেখুন</button>
+      </div>`;
+    el.querySelector('.add').onclick=()=>addToCart(p.id);
+    el.querySelector('.view').onclick=()=>openModal(p.id);
+    return el;
+  }
+
+  // Render sections
+  function filtered(list){
+    return list.filter(p=> (state.cat==='সব' || p.cat===state.cat) && (state.q==='' || p.title.toLowerCase().includes(state.q)));
+  }
+  function renderGrid(id, items){
+    const wrap = qs(id);
+    wrap.innerHTML='';
+    filtered(items).forEach(p=>wrap.appendChild(card(p)));
+  }
+
+  function renderAll(){
+    renderCats();
+    renderGrid('#dealGrid', PRODUCTS.filter(p=>p.tags.includes('deal')));
+    renderGrid('#newGrid', PRODUCTS.filter(p=>p.tags.includes('new')));
+  }
+
+  // Search
+  qs('#q').addEventListener('input', e=>{state.q=e.target.value.trim().toLowerCase(); renderAll();});
+
+  // ===== Cart logic =====
+  function saveCart(){ localStorage.setItem('potchir_cart', JSON.stringify(state.cart)); updateCartCount(); }
+  function updateCartCount(){ const n = Object.values(state.cart).reduce((a,b)=>a+b.qty,0); qs('#cartCount').textContent=n; }
+  function addToCart(id, qty=1){ const p=PRODUCTS.find(x=>x.id===id); if(!p) return; state.cart[id] = state.cart[id]||{id,qty:0}; state.cart[id].qty+=qty; saveCart(); openCart(); renderCart(); }
+  function removeFromCart(id){ delete state.cart[id]; saveCart(); renderCart(); }
+  function changeQty(id,delta){ if(!state.cart[id]) return; state.cart[id].qty+=delta; if(state.cart[id].qty<=0) delete state.cart[id]; saveCart(); renderCart(); }
+  function cartItems(){ return Object.values(state.cart).map(ci=>({ ...PRODUCTS.find(p=>p.id===ci.id), qty:ci.qty })); }
+  function cartTotal(){ return cartItems().reduce((s,i)=>s+i.price*i.qty,0); }
+  function renderCart(){
+    const body = qs('#cartBody');
+    body.innerHTML='';
+    const items = cartItems();
+    if(items.length===0){ body.innerHTML = '<div class="muted">কার্ট খালি। প্রোডাক্ট যোগ করুন।</div>'; }
+    items.forEach(i=>{
+      const row = document.createElement('div');
+      row.className='cart-item';
+      row.innerHTML=`
+        <img src="${i.img}" alt="${i.title}" style="width:64px;height:64px;object-fit:cover;border-radius:10px"/>
+        <div>
+          <div style="font-weight:600">${i.title}</div>
+          <div class="muted">${fmt(i.price)} × ${i.qty}</div>
+        </div>
+        <div class="qty">
+          <button class="icon-btn" aria-label="dec">−</button>
+          <strong>${i.qty}</strong>
+          <button class="icon-btn" aria-label="inc">＋</button>
+          <button class="icon-btn" aria-label="remove">🗑️</button>
+        </div>`;
+      const [dec, , inc, rm] = row.querySelectorAll('button');
+      dec.onclick=()=>changeQty(i.id,-1);
+      inc.onclick=()=>changeQty(i.id, 1);
+      rm.onclick=()=>removeFromCart(i.id);
+      body.appendChild(row);
+    });
+    qs('#cartTotal').textContent = fmt(cartTotal());
+  }
+  function openCart(){ qs('#cart').classList.add('open'); qs('#cart').setAttribute('aria-hidden','false'); }
+  function closeCart(){ qs('#cart').classList.remove('open'); qs('#cart').setAttribute('aria-hidden','true'); }
+  qs('#cartBtn').onclick=()=>{ renderCart(); openCart(); };
+  qs('#cartClose').onclick=closeCart;
+
+  // Checkout (mailto summary)
+  qs('#checkoutBtn').onclick=()=>{
+    const items = cartItems();
+    if(items.length===0){ alert('কার্ট খালি'); return; }
+    const lines = items.map(i=>`- ${i.title} × ${i.qty} = ${fmt(i.price*i.qty)}`).join('%0A');
+    const total = fmt(cartTotal());
+    const mail = `mailto:orders@potchir.com?subject=${encodeURIComponent('নতুন অর্ডার — potchir.com')}&body=অর্ডার তালিকা:%0A${lines}%0A%0Aমোট: ${total}%0A%0Aডেলিভারি ঠিকানা:%0Aফোন:`;
+    window.location.href = mail;
+  };
+
+  // ===== Product modal =====
+  function openModal(id){
+    const p = PRODUCTS.find(x=>x.id===id); if(!p) return;
+    qs('#pModalImg').innerHTML = `<img src="${p.img}" alt="${p.title}" style="width:100%;height:100%;object-fit:cover">`;
+    qs('#pModalCat').textContent = p.cat;
+    qs('#pModalTitle').textContent = p.title;
+    qs('#pModalRating').innerHTML = '★'.repeat(Math.round(p.rating))+` <span class="muted">(${p.rating})</span>`;
+    qs('#pModalPrice').textContent = fmt(p.price);
+    qs('#pModalMrp').textContent = fmt(p.mrp);
+    qs('#pModalOff').textContent = off(p.mrp,p.price)+"% off";
+    qs('#pModalDesc').textContent = p.desc;
+    qs('#pModal').classList.add('open');
+    qs('#pAdd').onclick=()=>addToCart(p.id);
+    qs('#pBuy').onclick=()=>{ addToCart(p.id); openCart(); };
+  }
+  function closeModal(){ qs('#pModal').classList.remove('open'); }
+  qs('#pClose').onclick=closeModal;
+  qs('#pModal').addEventListener('click',e=>{ if(e.target.id==='pModal') closeModal(); });
+
+  // Login (demo)
+  qs('#loginBtn').onclick=()=>{
+    const name = prompt('নাম লিখুন (ডেমো)');
+    if(name){ localStorage.setItem('pot_user', name); alert('স্বাগতম, '+name+'!'); }
+  };
+
+  // Init
+  document.getElementById('year').textContent = new Date().getFullYear();
+  updateCartCount();
+  renderAll();
+  </script></body>
+</html>
